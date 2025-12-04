@@ -29,10 +29,10 @@ USF/USO - Universal Service Fund / Universal Service Obligation - Funding for pr
 
 1. Introduction
 a. Project Background and Objectives
-Across Sub-Saharan Africa, the smartphone has become the single most powerful gateway to digital participation, yet the region continues to experience the world’s widest gap between mobile network coverage and actual usage. As of 2025, roughly 59 percent of people in Sub-Saharan Africa are covered by a mobile-network signal but remain offline, while 15 percent still live outside any mobile connectivity footprint. This disconnect stems less from network absence than from barriers of device affordability and user capability. For many households, even an entry-level 4G handset can represent more than 80 percent of monthly income, effectively excluding millions from the benefits of digital participation.
+Across Sub-Saharan Africa, the smartphone has become the single most powerful gateway to digital participation, yet the region continues to experience the world’s widest gap between mobile network coverage and actual usage. As of 2025, roughly 59 percent of people in Sub-Saharan Africa are covered by a mobile-network signal but remain offline, while 15 percent still live outside any mobile connectivity footprint. This disconnect stems less from network absence than from barriers of device affordability and user capability. For many households, even an entry-level 4G handset can represent more than 80 percent of monthly income, effectively excluding millions from the benefits of digital participation. 
 The digital landscape itself is evolving rapidly. 4G is expected to reach about half of all mobile connections by 2030, while early 5G deployments will begin adding an estimated $10 billion in annual economic value. However, those gains depend on affordable, capable devices reaching first-time users rather than remaining concentrated among urban elites. At the same time, the price of connectivity has declined globally, yet Africa’s data and device costs remain among the highest relative to income. Without urgent intervention to lower these structural barriers, the region risks deepening its digital divide even as the rest of the world continues to leap forward.
-Nigeria provides an ideal starting point for such intervention. It is Africa’s largest smartphone market and one of its most dynamic digital economies, yet the country still has more than 80 million unconnected adults. It has a relatively low cost of mobile data at about $0.38 per 1 gigabyte (on par with China, Brazil and Ghana) and yet it has one of the lowest mobile data consumption per capita. This suggests that there is head room for driving significantly more smartphone adoption even at current mobile data costs. Domestic demand skews toward low- and mid-range models dominated by the Transsion brands (Tecno, itel and Infinix), which collectively account for roughly two-thirds of shipments. These brands have built strong last-mile distribution networks and cater to the very demographic the program targets—first-time smartphone users. And yet 80 million adult Nigerians remain unconnected. This suggests that “business as usual” mechanisms by market operators may not achieve a dramatic change without structural interventions. By piloting in Nigeria, the program can test the suite of interventions that can catalyse rapid adoption. The assumption is that such a suite will necessarily comprise financing, distribution, and ecosystem solutions.
-The initiative unites the complementary capabilities of the African Development Bank (AfDB) and Google.
+Nigeria provides an ideal starting point for such intervention. It is Africa’s largest smartphone market and one of its most dynamic digital economies, yet the country still has more than 80 million unconnected adults. It has a relatively low cost of mobile data at about $0.38 per 1 gigabyte (on par with China, Brazil and Ghana) and yet it has one of the lowest mobile data consumption per capita. This suggests that there is head room for driving significantly more smartphone adoption even at current mobile data costs. Domestic demand skews toward low- and mid-range models dominated by the Transsion brands (Tecno, itel and Infinix), which collectively account for roughly two-thirds of shipments. These brands have built strong last-mile distribution networks and cater to the very demographic the program targets—first-time smartphone users. And yet 80 million adult Nigerians remain unconnected. This suggests that “business as usual” mechanisms by market operators may not achieve a dramatic change without structural interventions. By piloting in Nigeria, the program can test the suite of interventions that can catalyse rapid adoption. The assumption is that such a suite will necessarily comprise financing, distribution, and ecosystem solutions. 
+The initiative unites the complementary capabilities of the African Development Bank (AfDB) and Google. 
 AfDB brings financing architecture, policy leverage, and de-risking instruments through its Africa Digital Financial Inclusion Facility (ADFI), while Google contributes its Android ecosystem, digital-skills programs, and local partnerships with MNOs and fintechs. Together they can address both sides of the affordability equation: reducing the upfront cost of ownership through blended finance and micro-credit, and enhancing long-term value through connectivity, digital literacy, and local-content integration.
 Accordingly, the program’s core objective is to design and validate a scalable, financially sustainable model for rapidly accelerating smartphone access—one that combines innovative financing (usage-based credit, Buy Now Pay Later (BNPL or Pay As You Go mechanisms), efficient supply chains, and user-centric support systems. Through a structured Nigeria pilot, the project seeks to demonstrate measurable increases in smartphone penetration, usage intensity, and repayment performance, thereby creating a template that can be adapted across different African market archetypes.
 
@@ -115,9 +115,15 @@ Common KPIs defined by Hub.
 
 export const sendMessageToGemini = async (message: string): Promise<string> => {
   try {
-    const apiKey = process.env.API_KEY;
+    // Robust environment variable check to prevent crashes and support various naming conventions
+    let apiKey = undefined;
+    if (typeof process !== 'undefined' && process.env) {
+      apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY || process.env.Gemini_API_Key || process.env.REACT_APP_GEMINI_API_KEY;
+    }
+    
     if (!apiKey) {
-      return "API Key is missing. Please configure the environment.";
+      console.warn("API Key missing. Checked: API_KEY, GEMINI_API_KEY, Gemini_API_Key");
+      return "API Key is missing. Please configure the environment variable 'API_KEY' in your deployment settings.";
     }
 
     const ai = new GoogleGenAI({ apiKey });
@@ -133,6 +139,6 @@ export const sendMessageToGemini = async (message: string): Promise<string> => {
     return response.text || "I couldn't generate a response based on the report data.";
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return "Sorry, I encountered an error while processing your request. Please try again.";
+    return "Sorry, I encountered an error while processing your request. Please ensure your API Key is valid.";
   }
 };

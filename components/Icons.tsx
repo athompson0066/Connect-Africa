@@ -6,7 +6,7 @@ import {
   Users, 
   Zap, 
   ShieldCheck, 
-  BarChart3, 
+  ChartBar, // Replaces BarChart3
   Menu, 
   X,
   MessageSquare,
@@ -24,8 +24,8 @@ import {
   Sun,
   Cpu,
   BookOpen,
-  CheckCircle2,
-  AlertTriangle
+  CheckCircle, // Replaces CheckCircle2
+  TriangleAlert // Replaces AlertTriangle
 } from 'lucide-react';
 
 export const Icons = {
@@ -35,7 +35,7 @@ export const Icons = {
   Users,
   Zap,
   ShieldCheck,
-  BarChart3,
+  BarChart3: ChartBar, // Alias for backward compatibility
   Menu,
   X,
   MessageSquare,
@@ -53,6 +53,6 @@ export const Icons = {
   Sun,
   Cpu,
   BookOpen,
-  CheckCircle2,
-  AlertTriangle
+  CheckCircle2: CheckCircle, // Alias for backward compatibility
+  AlertTriangle: TriangleAlert // Alias for backward compatibility
 };
