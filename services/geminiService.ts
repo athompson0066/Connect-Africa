@@ -142,7 +142,7 @@ export const sendMessageToGemini = async (message: string): Promise<string> => {
     
     if (!apiKey) {
       console.warn("API Key missing. Checked: API_KEY, GEMINI_API_KEY, Gemini_API_Key");
-      return "API Key is missing. Please configure the environment variable 'Gemini_API_Key' in your deployment settings.";
+      return "API Key is missing. If you are seeing this, please ensure you have added 'Gemini_API_Key' to your Vercel Environment Variables.";
     }
 
     const ai = new GoogleGenAI({ apiKey });
