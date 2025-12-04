@@ -113,17 +113,36 @@ Common KPIs defined by Hub.
 --- END REPORT TEXT ---
 `;
 
+// Helper to safely retrieve API Key from various environments without crashing
+const getApiKey = (): string | undefined => {
+  // 1. Try Import Meta (Vite/Modern Bundlers)
+  // @ts-ignore
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    // @ts-ignore
+    const v = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_API_KEY || import.meta.env.Gemini_API_Key || import.meta.env.GEMINI_API_KEY;
+    if (v) return v;
+  }
+  
+  // 2. Try Global Process (Webpack/Node/Next.js)
+  // We wrap this in try-catch because simply accessing 'process' in some strict browser environments can throw ReferenceError
+  try {
+    if (typeof process !== 'undefined' && process.env) {
+      return process.env.API_KEY || process.env.GEMINI_API_KEY || process.env.Gemini_API_Key || process.env.REACT_APP_GEMINI_API_KEY;
+    }
+  } catch (e) {
+    // Ignore errors if process is not defined
+  }
+  
+  return undefined;
+};
+
 export const sendMessageToGemini = async (message: string): Promise<string> => {
   try {
-    // Robust environment variable check to prevent crashes and support various naming conventions
-    let apiKey = undefined;
-    if (typeof process !== 'undefined' && process.env) {
-      apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY || process.env.Gemini_API_Key || process.env.REACT_APP_GEMINI_API_KEY;
-    }
+    const apiKey = getApiKey();
     
     if (!apiKey) {
       console.warn("API Key missing. Checked: API_KEY, GEMINI_API_KEY, Gemini_API_Key");
-      return "API Key is missing. Please configure the environment variable 'API_KEY' in your deployment settings.";
+      return "API Key is missing. Please configure the environment variable 'Gemini_API_Key' in your deployment settings.";
     }
 
     const ai = new GoogleGenAI({ apiKey });
